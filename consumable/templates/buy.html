@@ -1,0 +1,23 @@
+{% extends '../templates/base.html' %}
+
+{% block title %}采购管理{% endblock %}
+
+{% block static %}
+<link href="../static/css/base1.css" rel="stylesheet" />
+<script src="../static/js/base.js"></script>
+<script src="../static/js/buy.js"></script>
+
+    <script>
+    get_suppliers();
+    </script>
+{% endblock %}
+
+{% block nav %}
+    <li><a href="#organization-content" id="get-organization-btn">供应商</a></li>
+    <li><a href="#order-content" id="get-users-btn">采购订单</a></li>
+{% endblock %}
+
+{% block content %}
+    <div id="organization-content" class="tab-pane">{% include 'consumble/supplier.html' %}</div>
+    <div id="order-content" class="tab-pane">{% include 'consumble/stock.html' %}</div>
+{% endblock %}

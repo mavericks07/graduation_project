@@ -1,0 +1,27 @@
+{% extends '../templates/base.html' %}
+
+{% block title %}基本信息{% endblock %}
+
+{% block static %}
+<link href="../static/css/base1.css" rel="stylesheet" />
+{#<script src="../static/js/base.js"></script>#}
+<script>
+{#get_organization_type_name('#type');#}
+get_organization_data();
+</script>
+{% endblock %}
+
+{% block nav %}
+    <li><a href="#organization-content" id="get-organization-btn">机构信息</a></li>
+    <li><a href="#member-content" id="get-users-btn">人员管理</a></li>
+    <li><a href="#storagesites-content" id="get-storagesites-btn">存放地</a></li>
+    <li><a href="#laboratory-content" id="get-laboratory-btn">实验室</a></li>
+    <li><a href="#section-4">审批设置</a></li>
+{% endblock %}
+
+{% block content %}
+    <div id="organization-content" class="tab-pane">{% include 'base/organiztion.html' %}</div>
+    <div id="member-content" class="tab-pane">{% include 'base/member.html' %}</div>
+    <div id="storagesites-content" class="tab-pane">{% include 'base/storagesites.html' %}</div>
+    <div id="laboratory-content" class="tab-pane">{% include 'base/laboratory.html' %}</div>
+{% endblock %}

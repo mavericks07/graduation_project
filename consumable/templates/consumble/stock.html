@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<!--update-stock-->
+<div class="modal fade" id="updateStockModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">领用单</h4>
+            </div>
+            <div class="modal-body">
+             <form id="update-stock-form">
+                <div class="input-group register-input">
+                        <span class="input-group-addon">数量:</span>
+                        <input name="id" type="hidden">
+                        <input type="number" class="form-control" name="number">
+                </div>
+             </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="update-stock-btn">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--picklist-->
+<div class="modal fade" id="picklistModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">领用单</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                <table class="table" id="pick-list-table">
+                  <thead>
+                    <tr>
+                        <th>品名</th>
+                        <th>单位</th>
+                        <th>数量</th>
+                        <th>实验室</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pick-list-info-table">
+
+                  </tbody>
+                </table>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="remove-pick-list-btn">清空列表</button>
+                <button type="button" class="btn btn-primary" id="picklist-btn">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--pick-stock-->
+<div class="modal fade" id="pickStockModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">新品入库</h4>
+            </div>
+            <div class="modal-body">
+                <form id="pick-stock-form">
+                <div class="input-group register-input">
+                        <span class="input-group-addon">数量:</span>
+                        <input type="number" class="form-control" name="number">
+                </div>
+                <div class="input-group register-input" id="lab">
+                        <span class="input-group-addon">实验室:</span>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="pick-stock-btn">确定新增</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--add-stock-->
+<div class="modal fade" id="addStockModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">新品入库</h4>
+            </div>
+            <div class="modal-body">
+                <form id="add-stock-form">
+                <div class="input-group register-input">
+                        <span class="input-group-addon">品名:</span>
+                        <input type="text" class="form-control" name="consumable_name">
+                </div>
+                <div class="input-group register-input">
+                        <span class="input-group-addon">品牌:</span>
+                        <input type="text" class="form-control" name="brand">
+                </div>
+                <div class="input-group register-input">
+                        <span class="input-group-addon">货号:</span>
+                        <input type="text" class="form-control" name="article_number">
+                </div>
+                <div class="input-group register-input">
+                        <span class="input-group-addon">单位:</span>
+                        <input type="text" class="form-control" name="unit">
+                </div>
+                <div class="input-group register-input">
+                        <span class="input-group-addon">数量:</span>
+                        <input type="text" class="form-control" name="number">
+                </div>
+                <div class="input-group register-input" id="classification">
+                        <span class="input-group-addon">分类:</span>
+                </div>
+                <div class="input-group register-input" id="storagesite">
+                        <span class="input-group-addon">存放地:</span>
+                </div>
+                <div class="input-group register-input">
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="add-stock-btn">确定新增</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="input-group col-md-3 content-header">
+       <input type="text" class="form-control"placeholder="请输入字段名" />
+            <span class="input-group-btn">
+               <button class="btn btn-default">查找</button>
+               <button class="btn btn-primary" style="margin-left: 5px" id="add-stocks-btn">新增</button>
+                <button class="btn btn-primary" style="margin-left: 5px" id="pick-list-btn">领用单</button>
+            </span>
+</div>
+<div class="table-responsive">
+<table class="table" style="margin-top: 3%" id="stock-table">
+  <thead>
+    <tr>
+        <th>品名</th>
+        <th>品牌</th>
+        <th>货号</th>
+        <th>单位</th>
+        <th>数量</th>
+        <th>类型</th>
+        <th>存放地</th>
+        <th>操作</th>
+    </tr>
+  </thead>
+  <tbody id="stock-info-table">
+
+  </tbody>
+</table>
+
+</div>
+
+</body>

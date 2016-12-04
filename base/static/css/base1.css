@@ -1,0 +1,60 @@
+.base{
+    margin: 0 auto;
+    width: 80%;
+    font-family: "Noto Sans CJK SC Bold";
+}
+
+.login-area{
+    margin: 10% auto;
+    width: 35%;
+    height: 50%;
+}
+
+.login-input{
+    margin: 0 auto;
+    width: 100%;
+}
+
+.login-area a{
+    cursor: pointer;
+}
+
+.register-area{
+    width: 40%;
+}
+
+.register-button{
+    height: 20px;
+    float: right;
+}
+
+.register-input{
+    margin: 10px auto;
+    height: 20px;
+    width: 80%;
+}
+
+.error-area{
+    margin: 0 auto;
+    width: 80%;
+    color: red;
+}
+
+.register a{
+    color: gray;
+    cursor: pointer;
+}
+
+#organization-form input{
+    border: none;
+    cursor: pointer;
+}
+#storagesits-table input{
+    border: none;
+}
+#laboratories-table input{
+    border: none;
+}
+#supplier-table input{
+    border: none;
+}
