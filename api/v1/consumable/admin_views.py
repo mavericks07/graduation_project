@@ -120,13 +120,18 @@ class PickListViewSet(UserRequireViewSet):
         return PickList.objects.filter(user__organization=self.request.real_company)
 
     @list_route(methods=['get'])
-    def self(self, request):
+    def myapprove(self, request):
         current_user = self.request.real_user
         apporve = get_object_or_404(Approve, user=current_user, type=Approve.APPROVE_TYPE_GET)
-        queryset = PickList.objects.filter(status=PickList.APPROVE_STATUS_ING)
-        print(queryset)
+        queryset = PickList.objects.exclude(status=PickList.APPROVE_STATUS_NOT_PASS)
         serializer = PickListListSerializer(queryset)
-        print(serializer.data)
+        return Response(serializer.data)
+
+    @list_route(methods=['get'])
+    def myapplication(self, request):
+        current_user = self.request.real_user
+        queryset = PickList.objects.filter(user=current_user)
+        serializer = PickListListSerializer(queryset)
         return Response(serializer.data)
 
     @detail_route(methods=['get'])
@@ -135,5 +140,12 @@ class PickListViewSet(UserRequireViewSet):
         picks = picklist.pick_set.all()
         serializer = PicksSerializer(picks)
         return Response(serializer.data)
+
+    @detail_route(methods=['get'])
+    def agree(self, request, pk=None):
+        picklist = self.get_object()
+        picklist.status = PickList.APPROVE_STATUS_PASS
+        picklist.save()
+        return Response({})
 
 

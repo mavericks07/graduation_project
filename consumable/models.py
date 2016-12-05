@@ -97,5 +97,29 @@ class Pick(Core):
     common_fields = ('number', ) + Core.common_fields
 
 
+class OperationRecord(Core):
+
+    OPERATION_TYPE_STOCK = 0
+    OPERATION_TYPE_PICK = 1
+    OPERATION_TYPE_DELETE = 2
+
+    OPERATION_TYPE_CHOICE = (
+        (OPERATION_TYPE_STOCK, '入库'),
+        (OPERATION_TYPE_PICK, '领用'),
+        (OPERATION_TYPE_DELETE, '删除')
+    )
+
+    user = models.ForeignKey(User)
+    type = models.IntegerField()
+    number = models.IntegerField(null=True, blank=True)
+
+    common_fields = ('type_name', 'number',) + Core.common_fields
+
+    @property
+    def type_name(self):
+        return self.OPERATION_TYPE_CHOICE[self.type][1]
+
+
+
 
 

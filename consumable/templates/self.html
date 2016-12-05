@@ -10,11 +10,46 @@
 {% endblock %}
 
 {% block nav %}
-    <li><a href="#organization-content" id="get-organization-btn">我的申请</a></li>
-    <li><a href="#order-content" id="get-users-btn">我的审批</a></li>
+    <li><a href="#myaoolication-content" id="get-organization-btn">我的申请</a></li>
+    <li><a href="#myapprove-content" id="get-users-btn">我的审批</a></li>
 {% endblock %}
 
 {% block content %}
-    <div id="organization-content" class="tab-pane">{% include 'consumble/supplier.html' %}</div>
-    <div id="order-content" class="tab-pane">{% include 'consumble/myapprove.html' %}</div>
+    <div id="myaoolication-content" class="tab-pane">{% include 'consumble/myapplication.html' %}</div>
+    <div id="myapprove-content" class="tab-pane">{% include 'consumble/myapprove.html' %}</div>
+    <!--picklist-->
+<div class="modal fade" id="mypicklistModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">领用单</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                <table class="table" id="my-pick-list-table">
+                  <thead>
+                    <tr>
+                        <th>品名</th>
+                        <th>单位</th>
+                        <th>数量</th>
+                        <th>实验室</th>
+                    </tr>
+                  </thead>
+                  <tbody id="my-pick-list-info-table">
+
+                  </tbody>
+                </table>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+{#                <button type="button" class="btn btn-danger" data-dismiss="modal" id="remove-pick-list-btn">清空列表</button>#}
+{#                <button type="button" class="btn btn-primary" id="picklist-btn">确定</button>#}
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 {% endblock %}
