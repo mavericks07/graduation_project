@@ -7,7 +7,7 @@ from consumable.models import Supplier, Classification, Consumable, Stock, Pick,
 from core.utils.rest_fields import CurrentCompanyDefault, CurrentUserDefault
 from core.exceptions import BusinessValidationError
 from api import error_const
-from api.v1.base.admin_serializers import StorageSitesSerializer, LaboratorySerializer
+from api.v1.base.admin_serializers import StorageSitesSerializer, LaboratorySerializer, UserSerizalizer
 
 
 class SupplierSerializer(serializers.ModelSerializer):
@@ -88,10 +88,16 @@ class PicksSerializer(serializers.ListSerializer):
 
 
 class PickListSerializer(serializers.ModelSerializer):
-    
+
+    user_vo = UserSerizalizer(source='user', read_only=True)
+
     class Meta:
         model = PickList
-        fields = PickList.common_fields
+        fields = PickList.common_fields + ('user_vo',)
+
+
+class PickListListSerializer(serializers.ListSerializer):
+    child = PickListSerializer()
 
 
 

@@ -7,12 +7,13 @@ from rest_framework import (viewsets, status, serializers, validators)
 from rest_framework.decorators import (list_route, detail_route)
 from rest_framework.response import Response
 from core.utils.pagination import NormalPagination
-from base.models import Organization, User, Laboratory, StorageSites
+from base.models import Organization, User, Laboratory, StorageSites, Approve
 from consumable.models import Supplier, Classification, Consumable, Stock, PickList, Pick
 from api.v1.base.admin_serializers import (OrganizationSerializer, UserAuthSerializer, UserRegisterSerializer,
                                            UserSerizalizer, StorageSitesSerializer, LaboratorySerializer)
 from api.v1.consumable.admin_serializers import (SupplierSerializer, ClassificationSerializer, ConsumableSerializer,
-                                                 StockSerializer, PickSerializer, PicksSerializer, PickListSerializer)
+                                                 StockSerializer, PickSerializer, PicksSerializer, PickListSerializer,
+                                                 PickListListSerializer)
 from api.v1.utils.viewsets import CsrfExemptViewSet, UserRequireViewSet
 from core.exceptions import BusinessValidationError
 from api import error_const
@@ -104,7 +105,7 @@ class StockViewSet(UserRequireViewSet):
     @list_route(methods=['get'])
     def application(self, request):
         current_user = self.request.real_user
-        picklist = get_object_or_404(PickList, user=current_user, status=PickList.APPROVE_STATUS_NOT_PASS)[0]
+        picklist = get_object_or_404(PickList, user=current_user, status=PickList.APPROVE_STATUS_NOT_PASS)
         picklist.status = PickList.APPROVE_STATUS_ING
         picklist.save()
         return Response({})
@@ -120,8 +121,12 @@ class PickListViewSet(UserRequireViewSet):
 
     @list_route(methods=['get'])
     def self(self, request):
-        queryset = PickList.objects.filter(user=self.request.real_user)
-        serializer = PickListSerializer(queryset)
+        current_user = self.request.real_user
+        apporve = get_object_or_404(Approve, user=current_user, type=Approve.APPROVE_TYPE_GET)
+        queryset = PickList.objects.filter(status=PickList.APPROVE_STATUS_ING)
+        print(queryset)
+        serializer = PickListListSerializer(queryset)
+        print(serializer.data)
         return Response(serializer.data)
 
     @detail_route(methods=['get'])

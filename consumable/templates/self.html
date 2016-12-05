@@ -6,10 +6,7 @@
 <link href="../static/css/base1.css" rel="stylesheet" />
 <script src="../static/js/base.js"></script>
 <script src="../static/js/buy.js"></script>
-
-    <script>
-    get_suppliers();
-    </script>
+<script src="../static/js/self.js"></script>
 {% endblock %}
 
 {% block nav %}
@@ -19,5 +16,5 @@
 
 {% block content %}
     <div id="organization-content" class="tab-pane">{% include 'consumble/supplier.html' %}</div>
-    <div id="order-content" class="tab-pane">{% include 'consumble/stock.html' %}</div>
+    <div id="order-content" class="tab-pane">{% include 'consumble/myapprove.html' %}</div>
 {% endblock %}

@@ -29,6 +29,9 @@ $(function () {
         stock_id = $('#update-stock-form input[name="id"]').val();
         update_stock(stock_id);
     });
+    $('#picklist-btn').click(function () {
+        add_application();
+    });
     $('#classification').append(create_classification_select());
     $('#storagesite').append(create_storagesites_select());
     get_classifications();
@@ -38,6 +41,24 @@ $(function () {
     // console.log(a);
 
 });
+function add_application() {
+    $.ajax({
+        url: '/api/v1/admin/stocks/application/',
+        headers:{
+            Authorization: $.cookie("token")
+        },
+        dataType: 'json',
+        type: 'GET',
+        success: function (resp) {
+            show_change_success();
+            $('#picklistModal').modal('hide');
+        },
+        error: function () {
+            toastr.error('', '请输入完整信息');
+        }
+
+    });
+}
 // classifications
 function add_classification() {
     $.ajax({

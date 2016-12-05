@@ -80,6 +80,12 @@ class PickList(Core):
     user = models.ForeignKey(User)
     status = models.IntegerField(choices=APPROVE_STATUS_CHOICE, default=APPROVE_STATUS_NOT_PASS)
 
+    common_fields = ('status_name',) + Core.common_fields
+
+    @property
+    def status_name(self):
+        return self.APPROVE_STATUS_CHOICE[self.status][1]
+
 
 class Pick(Core):
 
