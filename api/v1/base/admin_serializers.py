@@ -2,7 +2,7 @@
 from rest_framework import serializers, validators
 from core.utils import generate_token
 from core.exceptions import BLANK_ERROR
-from base.models import Organization, User, Role, StorageSites, Laboratory
+from base.models import Organization, User, StorageSites, Laboratory, Approve
 from core.utils.rest_fields import CurrentCompanyDefault
 from core.exceptions import BusinessValidationError
 from api import error_const
@@ -15,17 +15,17 @@ class OrganizationSerializer(serializers.ModelSerializer):
         fields = Organization.common_fields
 
 
-class RoleSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Role
-        fields = ('role_id',)
+# class RoleSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Role
+#         fields = ('role_id',)
 
 
 class UserSerizalizer(serializers.ModelSerializer):
 
     organization = serializers.HiddenField(default=CurrentCompanyDefault())
-    role = RoleSerializer(many=True)
+    role = serializers.IntegerField(default=1)
     password = serializers.CharField(default='123')
 
     class Meta:
@@ -34,18 +34,22 @@ class UserSerizalizer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         print(attrs['username'])
-        if not attrs['role']:
-            raise BusinessValidationError(error_const.BUSINESS_ERROR.STAFF_NOT_EXIST)
-        print(attrs['role'])
+        print(attrs)
+        # if not attrs['role']:
+        #     raise BusinessValidationError(error_const.BUSINESS_ERROR.STAFF_NOT_EXIST)
+        # print(attrs['role'])
         return attrs
 
     def create(self, validated_data):
-        roles_data = validated_data.pop('role')
+        role_id = validated_data.pop('role')
+        print(role_id)
+        # role = Role.objects.get(role_id=role_id)
         user = User.objects.create(**validated_data)
-        for index, role_data in enumerate(roles_data):
-            role = Role.objects.filter(**role_data).first()
-            print(role_data['role_id'])
-            user.role.add(role)
+        # user.role.add(role)
+        # for index, role_data in enumerate(roles_data):
+        #     role = Role.objects.filter(**role_data).first()
+        #     print(role_data['role_id'])
+        #     user.role.add(role)
         # user.save()
         return user
 
@@ -90,8 +94,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         validated_data.pop('password2')
         organization = self.create_organization(name, type)
         user = User.objects.create(**validated_data)
-        role = Role.objects.filter(role_id=0).first()
-        user.role.add(role)
+        #role = Role.objects.filter(role_id=0).first()
+        #user.role.add(role)
         user.organization = organization
         user.save()
         return user
@@ -122,3 +126,17 @@ class LaboratorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Laboratory
         fields = Laboratory.common_fields + ('organization',)
+
+
+class ApproveSerializer(serializers.ModelSerializer):
+
+    organization = serializers.HiddenField(default=CurrentCompanyDefault())
+    user_vo = UserSerizalizer(read_only=True, source='user')
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
+
+    class Meta:
+        model = Approve
+        fields = Approve.common_fields + ('user_vo', 'organization', 'user')
+
+    # def create(self, validated_data):
+    #     user_id =

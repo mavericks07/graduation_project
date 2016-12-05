@@ -1,7 +1,7 @@
 /**
  * Created by eason on 16-11-14.
  */
-var types;
+var types, users ,approves;
 
 $(function () {
 
@@ -17,6 +17,10 @@ $(function () {
     });
     $('#add-laboratories-btn').click(function () {
        $('#addLaboratoriesModal').modal('toggle');
+    });
+    $('#add-approves-btn').click(function () {
+        create_users_select();
+       $('#addApproveModal').modal('toggle');
     });
     $('#register-btn').click(function () {
         register();
@@ -37,34 +41,19 @@ $(function () {
         get_users()
     });
     $('#add-member-btn').click(function () {
-        var roles = $('#roles').serializeArray();
-        console.log(roles)
-        j = {}
-        var roles_array = new Array();
-        $.each(roles, function (index, data){
-            var role = {}
-            role['role_id'] = data.value;
-            roles_array.push(role);
-        })
-        var form_data = $('#add-user-form').serializeArray();
-        $.each(form_data, function (index, data) {
-                j[data['name']] = data['value'];
-        });
-        j.role = roles_array;
-        var a = JSON.stringify(j);
-        // console.log(j);
+
         $.ajax({
             url: '/api/v1/admin/users/',
-            data: a,
+            data: $('#add-user-form').serialize(),
             headers:{
                 Authorization: $.cookie("token")
             },
             type: 'POST',
             dataType: "json",
-            contentType: "application/json; charset=utf-8",
             success: function (resp) {
+                $('#addUserModal').modal('hide');
                 $.each(resp, function (index, item) {
-                    //$(id).append("<option value="+index+">"+item+"</option>");
+
                 });
             },
             error: function () {
@@ -84,10 +73,16 @@ $(function () {
     $('#add-laboratory-btn').click(function () {
         add_laboratories();
     });
+    $('#add-approve-btn').click(function () {
+       add_approves();
+    });
     get_organization_type_name('#organization-type');
-    get_role_name();
+    // get_role_name();
+    get_users();
     get_laboratories();
     get_storagesites();
+    get_organization_data();
+    get_approves();
     get_organization_type_name('#type');
 
 
@@ -108,20 +103,7 @@ function get_organization_type_name(id) {
         }
     });
 }
-function create_types_select() {
 
-}
-function get_role_name(id) {
-    $.ajax({
-        url: '/api/v1/admin/organizations/role_name/',
-        type: 'GET',
-        dataType: "json",
-        success: function (resp) {
-            role_names = resp
-            console.log(role_names);
-        },
-    });
-}
 function register() {
     $.ajax({
         url: '/api/v1/admin/register/',
@@ -198,7 +180,7 @@ function save_orgnization() {
         dataType: 'json',
         type: 'PATCH',
         success: function (resp) {
-            alert('修改成功');
+            show_change_success();
         },
         error: function () {
             toastr.error('', '请输入完整信息');
@@ -222,18 +204,14 @@ function get_users(condition) {
         type: 'GET',
         success: function (resp) {
             $('#user-info-table').html("");
-            var users = resp.results;
+            users = resp.results;
             $.each(users, function (index, user) {
-                var roles = '';
-                //console.log(user.role_vo.name);
-                $.each(user.role, function (index, role) {
-                        roles += role_names[role.role_id]+','
-                });
+
                 $('#user-info-table').append(
                     '<tr>' +
                         "<td>"+user.username+"</td>" +
                         "<td>"+user.phone+"</td>" +
-                        "<td>"+roles+"</td>" +
+                        "<td>"+user.role+"</td>" +
                         "<td>" +
                             "<button class='btn btn-primary'>设置</button>" +
                             "<button class='btn btn-danger' style='margin-left: 20px'>删除</button>" +
@@ -250,7 +228,13 @@ function get_users(condition) {
 
     });
 }
+function create_users_select() {
+    $.each(users, function (index, user) {
+        var option = "<option value='"+user.id+"'>"+user.username+"</option>";
+        $('#user-select').append(option);
+    })
 
+}
 // storagesites
 function create_storagesites_select(storagesite_name) {
     var options = "";
@@ -327,7 +311,7 @@ function save_storagesite(obj, storagesite) {
         dataType: 'json',
         type: 'PATCH',
         success: function (resp) {
-            alert('修改成功');
+            show_change_success();
         },
         error: function () {
             toastr.error('', '请输入完整信息');
@@ -433,7 +417,7 @@ function save_laboratories(obj, storagesite) {
         dataType: 'json',
         type: 'PATCH',
         success: function (resp) {
-            alert('修改成功');
+            show_change_success();
         },
         error: function () {
             toastr.error('', '请输入完整信息');
@@ -491,3 +475,68 @@ function add_laboratories() {
     });
 }
 
+//approve
+
+function add_approves() {
+    $.ajax({
+        url: '/api/v1/admin/approves/',
+        headers:{
+            Authorization: $.cookie("token")
+        },
+        data: $('#add-approves-form').serialize(),
+        dataType: 'json',
+        type: 'POST',
+        success: function (resp) {
+            //$('#storagesites-info-table').html("");
+            console.log(resp);
+            $('#addApproveModal').modal('hide');
+            var tr = "<tr>" +
+                         "<td>"+resp.user_vo.username+"</td>"+
+                         "<td>"+approve_type[resp.type]+"</td>"+
+                         "<td>" +
+                            "<button class='btn btn-danger remove-btn' onclick='remove_laboratories(obj=this,"+JSON.stringify(resp)+")'>删除</button>" +
+                         "</td>" +
+                     "</tr>";
+            $('#approves-info-table').append(tr);
+        },
+        error: function () {
+            toastr.error('', '请输入完整信息');
+        }
+
+    });
+}
+function get_approves() {
+    $.ajax({
+        url: '/api/v1/admin/approves/',
+        headers:{
+            Authorization: $.cookie("token")
+        },
+        data: $('#add-approves-form').serialize(),
+        dataType: 'json',
+        type: 'GET',
+        success: function (resp) {
+            //$('#storagesites-info-table').html("");
+            approves = resp.results;
+            $.each(approves, function (index, approve) {
+                var tr = "<tr>" +
+                         "<td>"+approve.user_vo.username+"</td>"+
+                         "<td>"+approve_type[approve.type]+"</td>"+
+                         "<td>" +
+                            "<button class='btn btn-danger remove-btn' onclick='remove_laboratories(obj=this,"+JSON.stringify(resp)+")'>删除</button>" +
+                         "</td>" +
+                     "</tr>";
+                $('#approves-info-table').append(tr);
+            })
+            $('#addApproveModal').modal('hide');
+
+        },
+        error: function () {
+            toastr.error('', '请输入完整信息');
+        }
+
+    });
+}
+var approve_type = {
+    "0": "采购",
+    "1": "领用"
+}

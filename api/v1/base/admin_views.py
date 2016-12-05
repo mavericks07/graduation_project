@@ -6,9 +6,9 @@ from rest_framework import (viewsets, status, serializers, validators)
 from rest_framework.decorators import (list_route, detail_route)
 from rest_framework.response import Response
 from core.utils.pagination import NormalPagination
-from base.models import Organization, User, Role, Laboratory, StorageSites
+from base.models import Organization, User, Laboratory, StorageSites, Approve
 from api.v1.base.admin_serializers import (OrganizationSerializer, UserAuthSerializer, UserRegisterSerializer,
-                                           UserSerizalizer, StorageSitesSerializer, LaboratorySerializer)
+                                           UserSerizalizer, StorageSitesSerializer, LaboratorySerializer, ApproveSerializer)
 
 from api.v1.utils.viewsets import CsrfExemptViewSet, UserRequireViewSet
 from api.v1.utils.caches import cache_for_admin_login, cache_for_admin_logout
@@ -25,9 +25,9 @@ class OrganizationViewSet(UserRequireViewSet):
     def type_name(self, request):
         return Response(Organization.get_type_name())
 
-    @list_route(methods=['get'], authentication_classes=[])
-    def role_name(self, request):
-        return Response(Role.get_role_name())
+    # @list_route(methods=['get'], authentication_classes=[])
+    # def role_name(self, request):
+    #     return Response(Role.get_role_name())
 
     def get_queryset(self):
         return Organization.objects.filter(id=self.request.real_company.id)
@@ -82,3 +82,11 @@ class LaboratoryViewSet(UserRequireViewSet):
 
     def get_queryset(self):
         return Laboratory.objects.filter(organization=self.request.real_company)
+
+
+class ApproveViewSet(UserRequireViewSet):
+    serializer_class = ApproveSerializer
+    queryset = Approve.objects.all()
+
+    def get_queryset(self):
+        return Approve.objects.filter(organization=self.request.real_company)

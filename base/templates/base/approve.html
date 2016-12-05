@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<!--add-laboratory-->
+<div class="modal fade" id="addApproveModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">新增审批人</h4>
+            </div>
+            <div class="modal-body">
+                <form id="add-approves-form">
+                <div class="input-group register-input">
+                        <span class="input-group-addon">用户:</span>
+                        <select class="btn btn-default" name="user" id="user-select">
+
+                        </select>
+                </div>
+                <div class="input-group register-input">
+                        <span class="input-group-addon">类型:</span>
+                        <select class="btn btn-default" name="type" id="type-select">
+                            <option value="0">采购</option>
+                            <option value="1">领用</option>
+                        </select>
+                </div>
+                <div class="input-group register-input">
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="add-approve-btn">确定新增</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="input-group col-md-3 content-header">
+       <input type="text" class="form-control"placeholder="请输入字段名" />
+            <span class="input-group-btn">
+               <button class="btn btn-default">查找</button>
+               <button class="btn btn-primary" style="margin-left: 5px" id="add-approves-btn">新增</button>
+            </span>
+</div>
+<div class="table-responsive">
+<table class="table" style="margin-top: 3%" id="approves-table">
+  <thead>
+    <tr>
+        <th>用户</th>
+        <th>类型</th>
+        <th>操作</th>
+    </tr>
+  </thead>
+  <tbody id="approves-info-table">
+
+  </tbody>
+</table>
+
+</div>
+
+</body>
+</html>

@@ -2,7 +2,7 @@
 from rest_framework import serializers, validators
 from core.utils import generate_token
 from core.exceptions import BLANK_ERROR
-from base.models import Organization, User, Role, StorageSites, Laboratory
+from base.models import Organization, User, StorageSites, Laboratory
 from consumable.models import Supplier, Classification, Consumable, Stock, Pick, PickList
 from core.utils.rest_fields import CurrentCompanyDefault, CurrentUserDefault
 from core.exceptions import BusinessValidationError
@@ -82,11 +82,16 @@ class PickSerializer(serializers.ModelSerializer):
         fields = Pick.common_fields + ('stock_vo', 'lab_vo', 'list')
 
 
-class PickListSerializer(serializers.ListSerializer):
+class PicksSerializer(serializers.ListSerializer):
 
     child = PickSerializer()
 
 
+class PickListSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = PickList
+        fields = PickList.common_fields
 
 
 

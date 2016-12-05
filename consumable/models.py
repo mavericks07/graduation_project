@@ -74,6 +74,8 @@ class PickList(Core):
     APPROVE_STATUS_CHOICE = (
         (APPROVE_STATUS_PASS, '通过'),
         (APPROVE_STATUS_NOT_PASS, u'未通过 '),
+        (APPROVE_STATUS_ING, '审批中'),
+        (APPROVE_STATUS_REJECT, '被驳回')
     )
     user = models.ForeignKey(User)
     status = models.IntegerField(choices=APPROVE_STATUS_CHOICE, default=APPROVE_STATUS_NOT_PASS)

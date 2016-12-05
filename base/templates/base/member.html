@@ -24,10 +24,15 @@
                 <input type="hidden" value="123" name="password">
                 <div class="input-group register-input">
                 </div>
-                </form>
-                <form id="roles">
-                    <input type="checkbox" value="0" name="role_id"/>admin
-                    <input type="checkbox" value="1" name="role_id"/>LA
+                <div class="input-group register-input" id="storagesite">
+                        <span class="input-group-addon">角色:</span>
+                        <select type="button" class="btn btn-default" name="role">
+                            <option value="1">实验员</option>
+                            <option value="0">系统管理员</option>
+                        </select>
+                </div>
+{#                    <input type="checkbox" value="0" name="role_id"/>#}
+{#                    <input type="checkbox" value="1" name="role_id"/>#}
                 </form>
             </div>
             <div class="modal-footer">
