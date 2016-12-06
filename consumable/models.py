@@ -91,26 +91,36 @@ class Pick(Core):
 
     stock = models.ForeignKey(Stock)
     number = models.IntegerField()
+    return_number = models.IntegerField(default=0)
+    can_return_number = models.IntegerField()
     lab = models.ForeignKey(Laboratory)
     list = models.ForeignKey(PickList)
 
-    common_fields = ('number', ) + Core.common_fields
+    common_fields = ('number', 'return_number', 'can_return_number',) + Core.common_fields
+
+    def can_return(self):
+        if self.return_number <= self.can_return_number:
+            return True
+        return False
 
 
 class OperationRecord(Core):
 
     OPERATION_TYPE_STOCK = 0
     OPERATION_TYPE_PICK = 1
-    OPERATION_TYPE_DELETE = 2
+    OPERATION_TYPE_RETURN = 2
+    OPERATION_TYPE_DELETE = 3
 
     OPERATION_TYPE_CHOICE = (
         (OPERATION_TYPE_STOCK, '入库'),
         (OPERATION_TYPE_PICK, '领用'),
+        (OPERATION_TYPE_RETURN, '归还'),
         (OPERATION_TYPE_DELETE, '删除')
     )
 
     user = models.ForeignKey(User)
     type = models.IntegerField()
+    stock = models.ForeignKey(Stock)
     number = models.IntegerField(null=True, blank=True)
 
     common_fields = ('type_name', 'number',) + Core.common_fields
@@ -118,6 +128,18 @@ class OperationRecord(Core):
     @property
     def type_name(self):
         return self.OPERATION_TYPE_CHOICE[self.type][1]
+
+    @staticmethod
+    def add_record(user, stock, type, number):
+        create_op_record_condition = {
+            'user': user,
+            'stock': stock,
+            'type': type,
+            'number': number
+        }
+        op_record = OperationRecord.objects.create(**create_op_record_condition)
+        op_record.save()
+
 
 
 

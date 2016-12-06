@@ -73,7 +73,7 @@ function add_classification() {
             console.log(resp);
             $('#addClassificationModal').modal('hide');
             var tr = "<tr>" +
-                         "<td><input name='name' class='form-control left' type='text' value="+resp.name+" /></td>"+
+                         "<td><input name='name' class='form-control' type='text' value="+resp.name+"/></td>"+
                          "<td>" +
                             "<button class='btn btn-primary save-storagesite' onclick='save_classification(this,"+JSON.stringify(resp)+")'>保存</button>" +
                             "<button class='btn btn-danger remove-btn' onclick='remove_supplier(this,"+JSON.stringify(resp)+")'>删除</button>" +

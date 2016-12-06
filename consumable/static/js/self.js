@@ -101,6 +101,33 @@ function get_my_application(condition) {
     });
 }
 
+function return_consumable(obj, pick) {
+    var number = $(obj).parent().prev().children().val();
+    var data = {
+        'number': number
+    };
+    $.ajax({
+        url: '/api/v1/admin/picks/' + pick.id + '/return_/',
+        headers:{
+            Authorization: $.cookie("token")
+        },
+        data: JSON.stringify(data),
+        dataType: 'json',
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        success: function (resp) {
+            $('#mypicklistModal').modal('hide');
+            show_retuen_success();
+            get_picklist(pick);
+        },
+        error: function (resp) {
+            var msg = get_error_msg(resp)
+            toastr.error('', msg);
+        }
+
+    });
+}
+
 function get_picklist(pick) {
     $.ajax({
         url: '/api/v1/admin/picklist/' + pick.id + '/detail/',
@@ -122,6 +149,10 @@ function get_picklist(pick) {
                     "<td>"+consumable.unit+"</td>" +
                     "<td>"+pick.number+"</td>" +
                     "<td>"+lab.name+"</td>" +
+                    "<td>"+pick.can_return_number+"</td>" +
+                    "<td>"+pick.return_number+"</td>" +
+                    "<td><input class='form-control left' style='max-width: 60px' type='number' name='number'></td>" +
+                    "<td><button class='btn btn-success remove-btn' onclick='return_consumable(this, "+JSON.stringify(pick)+")'>归还</button></td>" +
                     "</tr>"
                 )
             })
@@ -129,8 +160,7 @@ function get_picklist(pick) {
 
         },
         error: function () {
-            toastr.warning('', '您还没领用耗材')
-
+            //toastr.warning('', '您还没领用耗材')
         }
 
     });

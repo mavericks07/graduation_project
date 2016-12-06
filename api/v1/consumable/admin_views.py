@@ -8,7 +8,7 @@ from rest_framework.decorators import (list_route, detail_route)
 from rest_framework.response import Response
 from core.utils.pagination import NormalPagination
 from base.models import Organization, User, Laboratory, StorageSites, Approve
-from consumable.models import Supplier, Classification, Consumable, Stock, PickList, Pick
+from consumable.models import Supplier, Classification, Consumable, Stock, PickList, Pick, OperationRecord
 from api.v1.base.admin_serializers import (OrganizationSerializer, UserAuthSerializer, UserRegisterSerializer,
                                            UserSerizalizer, StorageSitesSerializer, LaboratorySerializer)
 from api.v1.consumable.admin_serializers import (SupplierSerializer, ClassificationSerializer, ConsumableSerializer,
@@ -62,6 +62,8 @@ class StockViewSet(UserRequireViewSet):
         current_stock = self.get_object()
         current_stock.number += number
         current_stock.save()
+        current_user = self.request.real_user
+        OperationRecord.add_record(current_user, current_stock, OperationRecord.OPERATION_TYPE_STOCK, number)
         serializer = StockSerializer(current_stock)
         return Response(serializer.data)
 
@@ -80,6 +82,7 @@ class StockViewSet(UserRequireViewSet):
             'stock': stock,
             'lab_id': lab,
             'number': number,
+            'can_return_number': number,
             'list': picklist
         }
         stock.number -= number
@@ -99,6 +102,10 @@ class StockViewSet(UserRequireViewSet):
                 stock.number += pick.number
                 stock.save()
             picklist.delete()
+        for pick in picks:
+            stock = pick.stock
+            OperationRecord.add_record(current_user, stock, OperationRecord.OPERATION_TYPE_PICK, pick.number)
+        picklist.delete()
         serializer = PicksSerializer(picks)
         return Response(serializer.data)
 
@@ -108,6 +115,41 @@ class StockViewSet(UserRequireViewSet):
         picklist = get_object_or_404(PickList, user=current_user, status=PickList.APPROVE_STATUS_NOT_PASS)
         picklist.status = PickList.APPROVE_STATUS_ING
         picklist.save()
+        return Response({})
+
+    @detail_route(methods=['post'])
+    def return_(self, request, pk=None):
+        stock = self.get_object()
+        current_user = self.request.real_user
+        number = int(request.data.get('number', None))
+        stock.number += number
+        stock.save()
+        OperationRecord.add_record(current_user, stock, OperationRecord.OPERATION_TYPE_RETURN, number)
+        return Response({})
+
+
+class PickViewSet(UserRequireViewSet):
+
+    serializer_class = PickSerializer
+    queryset = Pick.objects.all()
+
+    def get_queryset(self):
+        return Pick.objects.filter(lab__organization=self.request.real_company)
+
+    @detail_route(methods=['post'])
+    def return_(self, request, pk=None):
+        pick = self.get_object()
+        current_user = self.request.real_user
+        number = int(request.data.get('number', None))
+        if number > pick.can_return_number:
+            raise BusinessValidationError(error_const.BUSINESS_ERROR.MORE_THAN_CAN_RETURN)
+        stock = pick.stock
+        pick.return_number += number
+        pick.can_return_number -= number
+        pick.save()
+        stock.number += number
+        stock.save()
+        OperationRecord.add_record(current_user, stock, OperationRecord.OPERATION_TYPE_RETURN, number)
         return Response({})
 
 

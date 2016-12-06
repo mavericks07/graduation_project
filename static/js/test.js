@@ -21,3 +21,6 @@ function get_error_msg(resp) {
 function show_change_success() {
     toastr.success('', '修改成功');
 }
+function show_retuen_success() {
+    toastr.success('', '归还成功');
+}

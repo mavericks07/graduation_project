@@ -21,6 +21,7 @@ v1_admin_router.register(r'suppliers', v1_consumable_views.SupplierViewSet, 'sup
 v1_admin_router.register(r'classifications', v1_consumable_views.ClassificationViewSet, 'classifications')
 v1_admin_router.register(r'consumables', v1_consumable_views.ConsumableViewSet, 'consumables')
 v1_admin_router.register(r'stocks', v1_consumable_views.StockViewSet, 'stocks')
+v1_admin_router.register(r'picks', v1_consumable_views.PickViewSet, 'picks')
 v1_admin_router.register(r'picklist', v1_consumable_views.PickListViewSet, 'picklist')
 
 urlpatterns = [

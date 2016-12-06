@@ -17,5 +17,6 @@ class BUSINESS_ERROR():
     '''
 
     MORE_THAN_STOCK = ('MORE_THAN_STOCK', '领用数量大于库存')
+    MORE_THAN_CAN_RETURN = ('MORE_THAN_CAN_RETURN', '大于可归还数量')
 
 
