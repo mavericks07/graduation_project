@@ -28,11 +28,6 @@ class Organization(Core):
     def __str__(self):
         return self.name
 
-    @staticmethod
-    def get_type_name():
-        t = dict(Organization.TYPE_CHOICE)
-        return t
-
     @property
     def type_name(self):
         return Organization.get_type_name()[self.type]
@@ -53,7 +48,7 @@ class StorageSites(Core):
         return self.name
 
 
-class Laboratory(Core):
+class Lab(Core):
 
     name = models.CharField(u'实验室名称', max_length=128)
     remark = models.CharField(u'备注', max_length=256, null=True, blank=True)
@@ -62,50 +57,26 @@ class Laboratory(Core):
     common_fields = ('name', 'remark',) + Core.common_fields
 
 
-# class Role(Core):
-#
-#     ROLE_ADMIN = 0
-#     ROLE_LA = 1
-#     ROLE_BUYER = 2
-#     ROLE_APPROVER = 3
-#     ROLE_Warehouse_keeper = 4
-#
-#     ROLE_CHOICE = (
-#         (ROLE_ADMIN, '系统管理员'),
-#         (ROLE_LA, '实验员'),
-#         # (ROLE_BUYER, '采购员'),
-#         # (ROLE_APPROVER, '审批人'),
-#         # (ROLE_Warehouse_keeper, '库管员')
-#     )
-#
-#     role_id = models.IntegerField(choices=ROLE_CHOICE, default=ROLE_LA)
-#     name = models.CharField(u'角色名称', max_length=128)
-#
-#     @staticmethod
-#     def create_roles():
-#         roles = {
-#             0: '系统管理员',
-#             1: '实验员',
-#             2: '采购员',
-#             3: '审批人',
-#             4: '库管员'
-#         }
-#         for role_id in roles:
-#             id = Role.objects.filter(role_id=role_id).first()
-#             if id is None:
-#                 role = Role(role_id=role_id,  name=roles[role_id])
-#                 role.save()
-#
-#     def __str__(self):
-#         return self.name
-#
-#     @staticmethod
-#     def get_role_name():
-#         t = dict(Role.ROLE_CHOICE)
-#         return t
-
-
 class User(Core):
+
+    username = models.CharField(u'用户名', max_length=128)
+    password = models.CharField(u'密码', max_length=128)
+    phone = models.CharField(u'电话', max_length=12, null=True, blank=True)
+    role = models.ManyToManyField('Role')
+    organization = models.ForeignKey(Organization, verbose_name=u'所属机构', null=True, blank=True)
+
+    name = None
+    type = None
+    password2 = None
+
+    common_fields = ('username', 'password', 'phone',) + Core.common_fields
+
+    @staticmethod
+    def login(username, password):
+        return User.objects.get(username=username, password=password)
+
+
+class Role(Core):
 
     ROLE_ADMIN = 0
     ROLE_LA = 1
@@ -120,21 +91,38 @@ class User(Core):
         (ROLE_APPROVER, '审批人'),
         (ROLE_Warehouse_keeper, '库管员')
     )
-    username = models.CharField(u'用户名', max_length=128)
-    password = models.CharField(u'密码', max_length=128)
-    phone = models.CharField(u'电话', max_length=12, null=True, blank=True)
-    role = models.IntegerField(choices=ROLE_CHOICE, default=ROLE_LA)
-    organization = models.ForeignKey(Organization, verbose_name=u'所属机构', null=True, blank=True)
 
-    name = None
-    type = None
-    password2 = None
-
-    common_fields = ('username', 'password', 'phone',) + Core.common_fields
+    role_id = models.IntegerField(choices=ROLE_CHOICE, default=ROLE_LA)
+    role_name = models.CharField(u'角色名称', max_length=128)
+    function = models.ManyToManyField('Function')
 
     @staticmethod
-    def login(username, password):
-        return User.objects.get(username=username, password=password)
+    def create_roles():
+        roles = {
+            0: '系统管理员',
+            1: '实验员',
+            2: '采购员',
+            3: '审批人',
+            4: '库管员'
+        }
+        for role_id in roles:
+            id = Role.objects.filter(role_id=role_id).first()
+            if id is None:
+                role = Role(role_id=role_id,  name=roles[role_id])
+                role.save()
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def role_name(self):
+        t = dict(self.Role.ROLE_CHOICE)
+        return t
+
+
+class Function(Core):
+    function_id = models.IntegerField()
+    function_name = models.CharField(max_length=128)
 
 
 class Approve(Core):

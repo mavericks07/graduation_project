@@ -49,7 +49,7 @@ class BaseConfig(Configuration):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'graduation_project',
+            'NAME': 'lab',
             'USER': 'root',
             'PASSWORD': '123456',
             'HOST': '127.0.0.1',

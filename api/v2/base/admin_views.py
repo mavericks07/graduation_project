@@ -81,7 +81,7 @@ class LaboratoryViewSet(UserRequireViewSet):
     queryset = StorageSites.objects.all()
 
     def get_queryset(self):
-        return Lab.objects.filter(organization=self.request.real_company)
+        return Laboratory.objects.filter(organization=self.request.real_company)
 
 
 class ApproveViewSet(UserRequireViewSet):

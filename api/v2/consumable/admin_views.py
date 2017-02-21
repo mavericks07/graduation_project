@@ -11,10 +11,10 @@ from base.models import Organization, User, Lab, StorageSites, Approve
 from consumable.models import Supplier, Classification, Consumable, Stock, PickList, Pick, OperationRecord
 from api.v1.base.admin_serializers import (OrganizationSerializer, UserAuthSerializer, UserRegisterSerializer,
                                            UserSerizalizer, StorageSitesSerializer, LaboratorySerializer)
-from api.v1.consumable.admin_serializers import (SupplierSerializer, ClassificationSerializer, ConsumableSerializer,
+from api.v2.consumable.admin_serializers import (SupplierSerializer, ClassificationSerializer, ConsumableSerializer,
                                                  StockSerializer, PickSerializer, PicksSerializer, PickListSerializer,
                                                  PickListListSerializer)
-from api.v1.utils.viewsets import CsrfExemptViewSet, UserRequireViewSet
+from api.v2.utils.viewsets import CsrfExemptViewSet, UserRequireViewSet
 from core.exceptions import BusinessValidationError
 from api import error_const
 from core.utils.rest_fields import CurrentCompanyDefault, CurrentUserDefault

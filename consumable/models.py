@@ -1,6 +1,6 @@
 from django.db import models
 from core.models import Core
-from base.models import Organization, StorageSites, Laboratory, User
+from base.models import Organization, StorageSites, Lab, User
 
 
 class Supplier(Core):
@@ -93,7 +93,7 @@ class Pick(Core):
     number = models.IntegerField()
     return_number = models.IntegerField(default=0)
     can_return_number = models.IntegerField()
-    lab = models.ForeignKey(Laboratory)
+    lab = models.ForeignKey(Lab)
     list = models.ForeignKey(PickList)
 
     common_fields = ('number', 'return_number', 'can_return_number',) + Core.common_fields
